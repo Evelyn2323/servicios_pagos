@@ -1,4 +1,3 @@
-<!-- resources/views/dashboard.blade.php -->
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -6,7 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="{{ asset('CSS/styless.css') }}">
     <title>Pagos</title>
-    
 </head>
 <body>
     <div class="container">
@@ -48,7 +46,6 @@
                             <td>{{ $payment->amount }}</td>
                             <td>{{ $payment->created_at }}</td>
                             <td>
-                                <a href="{{ route('payments.edit', $payment) }}">Editar</a> |
                                 <form action="{{ route('payments.destroy', $payment) }}" method="POST" style="display:inline;">
                                     @csrf
                                     @method('DELETE')
@@ -60,16 +57,21 @@
                 </tbody>
             </table>
         </div>
-        <form action="{{ route('logout') }}" method="POST" style="display: inline;">
-            @csrf
-            <button type="submit" class="btn-logout">Cerrar sesión</button>
-        </form>
-        @if(session('success'))
-    <div class="alert alert-success">
-        {{ session('success') }}
-    </div>
-@endif
 
+        <!-- Botones de acciones (Editar perfil y Cerrar sesión) -->
+        <div>
+            <form action="{{ route('logout') }}" method="POST" style="display: inline;">
+                @csrf
+                <button type="submit" class="btn-logout">Cerrar sesión</button>
+            </form>
+            <a href="{{ route('profile.edit') }}" class="btn-edit-profile">Editar perfil</a>
+        </div>
+
+        @if(session('success'))
+            <div class="alert alert-success">
+                {{ session('success') }}
+            </div>
+        @endif
     </div>
 </body>
 </html>

@@ -21,7 +21,7 @@ h1 {
 /* Estilos para los paneles */
 .panel {
     background-color: #fff;
-    padding: 20px;
+    padding: 10px;
     border-radius: 8px;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
     margin-bottom: 20px;
@@ -117,4 +117,24 @@ a:hover {
 .btn-logout:hover {
     background-color: #e53935;
 }
-
+.action-buttons {
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+    margin-bottom: 20px;
+}
+.btn-logout, .btn-edit-profile, .btn-dashboard {
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    text-decoration: none;
+    color: white;
+    font-weight: bold;
+}
+.btn-logout {
+    background-color: #f44336; /* Rojo */
+}
+.btn-edit-profile {
+    background-color: #4caf50; /* Verde */
+}
