@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\MailTestController;
 use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\ServiceController;
@@ -19,7 +20,17 @@ Route::get('/home', function () {
     return view('home');
 })->name('home');
 
+Route::get('/admin', function () {
+    // Lógica para los usuarios con rol admin
+})->middleware('checkRole:admin');
+
+
 Route::resource('payments', PaymentController::class);
+
+/*Rutas de middleware*/
+Route::middleware('role:admin')->group(function () {
+    Route::resource('pagos', PaymentController::class);
+});
 
 
 // Redirigir a la página de inicio
@@ -38,6 +49,26 @@ Route::post('/payments', [PaymentController::class, 'store'])->middleware('auth'
 Route::get('/dashboard', function () {
     return view('dashboard');
 })->middleware(['auth', 'verified'])->name('dashboard');
+
+Route::get('/dashboard', function () {
+    return view('dashboard');
+})->middleware(['auth', 'verified', 'role:admin'])->name('dashboard');
+Route::middleware('role:admin')->group(function () {
+    Route::get('/payments/create', [PaymentController::class, 'create'])->name('payments.create');
+    Route::post('/payments', [PaymentController::class, 'store'])->name('payments.store');
+});
+Route::middleware('auth')->group(function () {
+    Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
+    Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
+    Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
+    Route::put('/profile', [ProfileController::class, 'update'])->name('profile.update');
+});
+
+
+Route::middleware('role:admin')->group(function () {
+    Route::resource('pagos', PaymentController::class);
+});
+
 
 // Rutas de perfil (solo para usuarios autenticados)
 Route::middleware('auth')->group(function () {
@@ -64,7 +95,12 @@ Route::middleware(['auth'])->group(function () {
     Route::put('/payments/{payment}', [PaymentController::class, 'update'])->name('payments.update');
     
     // Eliminar un pago
-    Route::delete('/payments/{payment}', [PaymentController::class, 'destroy'])->name('payments.destroy');
+    Route::delete('payments/{payment}', [PaymentController::class, 'destroy'])->name('payments.destroy');
+
+    Route::middleware('role:admin')->delete('/payments/{payment}', [PaymentController::class, 'destroy'])->name('payments.destroy');
+
+    Route::get('/send-test-email', [MailTestController::class, 'sendTestEmail']);
+
 });
 
 });

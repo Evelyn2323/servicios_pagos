@@ -46,15 +46,18 @@
                             <td>{{ $payment->amount }}</td>
                             <td>{{ $payment->created_at }}</td>
                             <td>
+                                @if(Auth::user()->roles->contains('name', 'admin'))  <!-- Verificar si el usuario tiene el rol de admin -->
                                 <form action="{{ route('payments.destroy', $payment) }}" method="POST" style="display:inline;">
                                     @csrf
-                                    @method('DELETE')
-                                    <button type="submit">Eliminar</button>
-                                </form>
-                            </td>
+                                        @method('DELETE')
+                                        <button type="submit">Eliminar</button>
+                                    </form>
+                                @endif
+                            </td>                            
                         </tr>
                     @endforeach
                 </tbody>
+                
             </table>
         </div>
 

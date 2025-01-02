@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Payment;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class PaymentController extends Controller
 {
@@ -56,11 +57,33 @@ class PaymentController extends Controller
         return view('profile.edit', compact('payment'));
     }
     
-
     public function destroy(Payment $payment)
     {
-        $payment->delete();
-        return redirect()->route('dashboard')->with('success', 'Pago eliminado correctamente.');
+        // Verificamos si el pago realmente existe
+        if ($payment) {
+            // Eliminar el pago
+            $payment->delete();
+
+            // Redirigir con un mensaje de éxito
+            return redirect()->route('payments.index')->with('success', 'Pago eliminado correctamente');
+        }
+
+        // Si no se encuentra el pago
+        return redirect()->route('payments.index')->with('error', 'Pago no encontrado');
     }
+    
+    
+    public function update($id, Request $request)
+{
+    if (Auth::user()->role->name !== 'admin') {
+        return redirect()->back()->with('error', 'No tienes permiso para realizar esta acción');
+    }
+
+    // Si es admin, continuar con la actualización
+    $Payment = Payment::find($id);
+    $Payment->update($request->all());
+    return redirect()->route('Payment.index');
+}
+
 
 }
